@@ -214,8 +214,11 @@ function catColor(cat){
 
 function toPesos(price){
   if(!price) return 0;
-  if(String(price).toUpperCase().includes('USD')) return parseFloat(price)*3450;
-  return parseFloat(price)||0;
+  const str = String(price).toUpperCase();
+  // Limpiar: quitar $, letras excepto el punto/coma, y convertir puntos de miles
+  const num = parseFloat(str.replace(/[^0-9.,]/g, '').replace(/\./g, '').replace(',', '.')) || 0;
+  if(str.includes('USD')) return num * 3450;
+  return num;
 }
 
 function plantSVG(pct){
