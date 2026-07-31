@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Regalos para María Paz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#F7F2E9; --paper:#FFFFFF;
+  --blue:#7FB8D1; --blue-dark:#4A87A3; --blue-light:#DFF0F6;
+  --pink:#EFA9BE; --pink-dark:#C56D89; --pink-light:#FBE6ED;
+  --mint:#7FC9A9; --mint-dark:#3E8F6C; --mint-light:#DFF2E9;
+  --beige:#C9A876; --beige-dark:#8A6D3F; --beige-light:#F0E6D2;
+  --coral:#F0A38C; --coral-dark:#B85F45; --coral-light:#FCE6DE;
+  --ink:#3D3A33; --line:#E8E0CE; --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',sans-serif;background:var(--cream);color:var(--ink);-webkit-font-smoothing:antialiased;}
+h1,h2,h3{font-family:'Poppins',sans-serif;font-weight:600;letter-spacing:-0.01em;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;transition:all 0.12s ease;}
+button:active{transform:scale(0.97);}
+input,select{font-family:inherit;font-size:15px;}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:11px 20px;border-radius:999px;font-weight:700;font-size:14.5px;}
+.btn-primary{background:var(--blue);color:#fff;} .btn-primary:hover{background:var(--blue-dark);}
+.btn-secondary{background:var(--paper);color:var(--ink);border:1.5px solid var(--line);} .btn-secondary:hover{border-color:var(--blue);}
+.btn-ghost{color:var(--blue-dark);font-weight:700;text-decoration:underline;text-underline-offset:3px;padding:6px 4px;}
+.btn:disabled{opacity:0.55;cursor:default;}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:16px;}
+.field label{font-size:13px;font-weight:700;color:var(--blue-dark);}
+.field input,.field select{padding:10px 13px;border-radius:10px;border:1.5px solid var(--line);background:#fff;outline:none;}
+.field input:focus,.field select:focus{border-color:var(--blue);}
+.field small{color:#8a8171;font-size:12.5px;}
+#app{max-width:920px;margin:0 auto;padding:28px 20px 80px;}
+.loading{text-align:center;padding:80px 20px;}
+.spinner{width:40px;height:40px;border:3px solid var(--line);border-top-color:var(--blue);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.landing{min-height:70vh;display:flex;align-items:center;justify-content:center;text-align:center;}
+.landing-box{max-width:420px;width:100%;}
+.landing h1{font-size:30px;line-height:1.25;margin-bottom:10px;}
+.landing p{color:#6d6455;font-size:15px;line-height:1.55;margin-bottom:26px;}
+.landing-card{padding:26px 24px;text-align:left;}
+.landing-toggle{margin-top:18px;font-size:13.5px;color:#8a8171;}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px;flex-wrap:wrap;}
+.topbar h1{font-size:24px;}
+.topbar .who{font-size:13px;color:#8a8171;}
+.topbar .who b{color:var(--ink);}
+.plant-wrap{background:var(--blue-light);border-radius:var(--radius);padding:18px 20px;display:flex;align-items:center;gap:18px;margin-bottom:24px;}
+.plant-wrap svg{flex-shrink:0;}
+.plant-text .eyebrow{margin-bottom:2px;font-size:12px;font-weight:800;letter-spacing:0.09em;text-transform:uppercase;color:var(--blue-dark);}
+.plant-text .count{font-family:'Poppins',sans-serif;font-size:19px;font-weight:600;}
+.plant-text .msg{font-size:13px;color:var(--blue-dark);margin-top:2px;}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px;}
+.tab{padding:8px 16px;border-radius:999px;border:1.5px solid var(--line);background:#fff;font-size:13.5px;font-weight:700;color:#6d6455;}
+.tab.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+.filters-bar{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;align-items:center;}
+.filter-group{display:flex;gap:8px;align-items:center;}
+.filter-group label{font-size:13px;font-weight:700;color:var(--blue-dark);}
+.filter-group select{padding:8px 12px;border-radius:8px;border:1.5px solid var(--line);background:#fff;font-size:13px;}
+.search-box{flex:1;min-width:200px;}
+.search-box input{width:100%;padding:10px 13px;border-radius:10px;border:1.5px solid var(--line);font-size:14px;}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;}
+.gift{display:flex;flex-direction:column;overflow:hidden;}
+.gift.taken-other{opacity:0.55;}
+.gift.taken-mine{border-color:var(--blue);border-width:2px;}
+.gift-img{width:100%;aspect-ratio:4/3;background:var(--blue-light);display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.gift-img img{width:100%;height:100%;object-fit:cover;display:block;}
+.gift-img .placeholder{font-size:36px;}
+.gift-body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:8px;flex:1;}
+.gift-cat{align-self:flex-start;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.06em;padding:3px 9px;border-radius:999px;}
+.gift-name{font-family:'Poppins',sans-serif;font-size:16px;font-weight:600;line-height:1.3;}
+.gift-price{font-size:14px;color:#6d6455;font-weight:700;}
+.gift-link{font-size:13px;color:var(--blue-dark);font-weight:700;text-decoration:none;}
+.gift-link:hover{text-decoration:underline;}
+.gift-actions{margin-top:auto;padding-top:8px;display:flex;flex-direction:column;gap:6px;}
+.status-mine{font-size:13px;font-weight:700;color:var(--blue-dark);background:var(--blue-light);padding:7px 10px;border-radius:9px;text-align:center;}
+.status-taken{font-size:13px;font-weight:700;color:#8a8171;background:#F1EDE1;padding:7px 10px;border-radius:9px;text-align:center;}
+.empty{text-align:center;padding:60px 20px;color:#8a8171;}
+.empty p:first-child{font-size:20px;color:var(--ink);margin-bottom:8px;font-family:'Poppins',sans-serif;font-weight:600;}
+.overlay{position:fixed;inset:0;background:rgba(58,50,39,0.45);display:flex;align-items:center;justify-content:center;padding:20px;z-index:50;}
+.modal{background:#fff;border-radius:16px;padding:26px 26px 22px;max-width:460px;width:100%;max-height:88vh;overflow-y:auto;}
+.modal h2{font-size:20px;margin-bottom:18px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:6px;}
+.admin-row{display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--line);}
+.admin-row:last-child{border-bottom:none;}
+.admin-row img{width:48px;height:48px;border-radius:8px;object-fit:cover;flex-shrink:0;}
+.admin-row .ph{width:48px;height:48px;border-radius:8px;background:var(--blue-light);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:20px;}
+.admin-row .info{flex:1;min-width:0;}
+.admin-row .name{font-weight:700;font-size:14.5px;}
+.admin-row .meta{font-size:12.5px;color:#8a8171;margin-top:2px;}
+.admin-row .taken{font-size:12.5px;color:var(--pink-dark);font-weight:700;margin-top:2px;}
+.admin-row .actions{display:flex;gap:6px;flex-shrink:0;}
+.icon-btn{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;border:1.5px solid var(--line);font-size:14px;}
+.icon-btn:hover{background:var(--blue-light);border-color:var(--blue);}
+.img-preview{width:100%;max-height:180px;border-radius:10px;margin-top:8px;object-fit:cover;}
+.names-box{background:var(--blue-light);border-radius:10px;padding:10px 13px;margin:0 0 16px;}
+.names-box .title{font-size:12.5px;font-weight:700;color:var(--blue-dark);margin-bottom:4px;}
+.names-box .list{font-size:12.5px;color:var(--ink);line-height:1.5;}
+.names-box .hint{font-size:11.5px;color:var(--blue-dark);margin-top:5px;}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 20px;border-radius:999px;font-size:13.5px;font-weight:700;z-index:60;opacity:0;transition:opacity .25s ease;pointer-events:none;white-space:nowrap;}
+.toast.show{opacity:1;}
+@media(max-width:520px){
+  .landing h1{font-size:25px;}
+  .topbar{flex-direction:column;align-items:flex-start;}
+  .filters-bar{flex-direction:column;}
+  .search-box{min-width:auto;width:100%;}
+}
+</style>
+</head>
+<body>
+<div id="app"><div class="loading"><div class="spinner"></div><p>Cargando...</p></div></div>
+<div id="toast" class="toast"></div>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+
+<script>
+/* ══════════════════════════════════════
+   CONFIGURACIÓN
+══════════════════════════════════════ */
+const ADMIN_PASS = 'Bebe2026';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD_1KdYUEg-8kDmfZrHtSUfUQjH2uAncb4",
+  authDomain: "regalos-maria-paz.firebaseapp.com",
+  projectId: "regalos-maria-paz",
+  storageBucket: "regalos-maria-paz.firebasestorage.app",
+  messagingSenderId: "80527573023",
+  appId: "1:80527573023:web:e725e2a35e6fb9beafe866"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const storage = firebase.storage();
+
+/* ══════════════════════════════════════
+   REGALOS INICIALES (se cargan solo la primera vez)
+══════════════════════════════════════ */
+const SEED_GIFTS = [
+  {name:'Cambiador portable — Estampado mar · Pombo y Lola',category:'Cuarto y descanso',price:'$85.000 COP',link:'https://pomboylola.com.co/collections/mar/products/cambiador-portable-mar'},
+  {name:'Cobija Mar — Estampado mar · Pombo y Lola',category:'Cuarto y descanso',price:'$99.000 COP',link:'https://pomboylola.com.co/collections/cobijas/products/cobija-borrego-mar'},
+  {name:'Set x3 babitas en muselina — Estampado mar · Pombo y Lola',category:'Ropa y accesorios',price:'$50.000 COP',link:'https://pomboylola.com.co/products/set-x-3-babitas-en-muselina?variant=43613427826735'},
+  {name:'Set x3 babitas en muselina — Estampado granja · Pombo y Lola',category:'Ropa y accesorios',price:'$50.000 COP',link:'https://pomboylola.com.co/products/set-x-3-babitas-en-muselina?variant=43613427761199'},
+  {name:'Cobija velvet granja — Pombo y Lola',category:'Cuarto y descanso',price:'$115.000 COP',link:'https://pomboylola.com.co/collections/all/products/cobija-velvet-granja'},
+  {name:'Saco de dormir 0-12 meses — Estampado mar · Pombo y Lola',category:'Cuarto y descanso',price:'$150.000 COP',link:'https://pomboylola.com.co/collections/all/products/saco-de-dormir-0-12-meses-mar'},
+  {name:'Toalla microfibra — Estampado mar · Pombo y Lola',category:'Baño e higiene',price:'$89.000 COP',link:'https://pomboylola.com.co/collections/all/products/toalla-de-microfibra-mar'},
+  {name:'Cobija granja — Pombo y Lola',category:'Cuarto y descanso',price:'$99.000 COP',link:'https://pomboylola.com.co/collections/granja/products/cobija-borrego-granja'},
+  {name:'Teteros set regalo — Amazon',category:'Alimentación',price:'$33 USD',link:'https://www.amazon.com/-/es/Dr-Browns-Antic%C3%B3licos-Entrenador-Extra%C3%ADbles/dp/B09NCJL76C/'},
+  {name:'Luz nocturna ballena — Amazon',category:'Cuarto y descanso',price:'$17 USD',link:'https://www.amazon.com/-/es/Atenuable-Temporizador-Decoraci%C3%B3n-Habitaci%C3%B3n-Guarder%C3%ADa/dp/B09YCNRVG4'},
+  {name:'Saco de dormir 0-6 meses — Color salvia · Amazon',category:'Cuarto y descanso',price:'$30 USD',link:'https://www.amazon.com/dp/B0CMTDTH79'},
+  {name:'Set juguetes silicona — Amazon',category:'Juguetes y estimulación',price:'$32 USD',link:'https://www.amazon.com/-/es/dp/B0GF1NLKC1'},
+  {name:'Bloques espuma escalada — Amazon',category:'Juguetes y estimulación',price:'$88 USD',link:'https://www.amazon.com/-/es/dp/B0DBQDLPBH'},
+  {name:'Juego parque de madera — Amazon',category:'Juguetes y estimulación',price:'$89 USD',link:'https://www.amazon.com/-/es/dp/B0D635D6R9'},
+  {name:'Diademas con flores — Amazon',category:'Ropa y accesorios',price:'$8 USD',link:'https://www.amazon.com/-/es/dp/B0CZNY9QK6'},
+  {name:'Mordedores x3 — Amazon',category:'Juguetes y estimulación',price:'$7 USD',link:'https://www.amazon.com/-/es/dp/B0FJQQLKNY'},
+  {name:'Mordedor color rosa — Amazon',category:'Juguetes y estimulación',price:'$7 USD',link:'https://www.amazon.com/-/es/dp/B0B3J9ZT5T'},
+  {name:'Gorritos para sol x2 — Amazon',category:'Ropa y accesorios',price:'$14 USD',link:'https://www.amazon.com/-/es/dp/B0GV3TF9VC'},
+  {name:'Sonajeros y juguetes 10 piezas — Amazon',category:'Juguetes y estimulación',price:'$28 USD',link:'https://www.amazon.com/-/es/dp/B0F62MWKGD'},
+  {name:'Tapete sensorial océano — Amazon',category:'Juguetes y estimulación',price:'$30 USD',link:'https://www.amazon.com/-/es/dp/B0FNRCK12P'},
+  {name:'Tapete de juego beige — Amazon',category:'Juguetes y estimulación',price:'$47 USD',link:'https://www.amazon.com/-/es/dp/B0D25Z8WLZ'},
+  {name:'Baberos — Amazon',category:'Ropa y accesorios',price:'$17 USD',link:'https://www.amazon.com/-/es/dp/B0CYCBQW5L'},
+  {name:'Extractor eléctrico — Amazon',category:'Alimentación',price:'$90.000 COP',link:'https://www.amazon.com/-/es/Paruu-P20-Extractor-el%C3%A9ctrico-libres/dp/B0FZT6GRJB'},
+  {name:'Lima eléctrica — Color rosa · Amazon',category:'Baño e higiene',price:'$15.000 COP',link:'https://www.amazon.com/Cortau%C3%B1as-el%C3%A9ctrico-el%C3%A9ctrica-almohadillas-silencioso/dp/B0F7LBS96G'},
+  {name:'Basurera de pañales — Color blanco · Amazon',category:'Baño e higiene',price:'$60 USD',link:'https://www.amazon.com/enrollable-requiere-ecol%C3%B3gica-art%C3%ADculos-esenciales/dp/B0GFD65QGN'},
+  {name:'Peluche nutria hora de dormir — Pepe Ganga',category:'Cuarto y descanso',price:'$280.000 COP',link:'https://www.pepeganga.com/nutria-hora-de-dormir-ghl41/p'},
+  {name:'Esterilizador de teteros microondas — Pepe Ganga',category:'Alimentación',price:'$100.000 COP',link:'https://www.pepeganga.com/microondas-esterilizador-de-vapor-d0806-3d-ar/p'},
+  {name:'Chupos x2 — Animal N1 rosa/gris · Pepe Ganga',category:'Alimentación',price:'$60.000 COP',link:'https://www.pepeganga.com/chupo-entretencion-prevent-animal-n1-rosa-gris-164203/p?skuId=313790'},
+  {name:'Cargador para bebé arcoíris — Pepe Ganga',category:'Paseo',price:'$300.000 COP',link:'https://www.pepeganga.com/cargador-para-bebe-arcoiris-infantino-300117-01/p'},
+  {name:'Enjuagador ballena — Pepe Ganga',category:'Baño e higiene',price:'$60.000 COP',link:'https://www.pepeganga.com/enjuagador-de-bano-en-cascada-ballena-blanca-skip-hop-9p466910/p'},
+  {name:'Juguetes de baño 4 piezas — IKEA',category:'Baño e higiene',price:'$30.000 COP',link:'https://www.ikea.com/co/es/p/aengshumla-juguetes-de-bano-4-piezas-10582267/'},
+  {name:'Peluche tortuga — IKEA',category:'Juguetes y estimulación',price:'$40.000 COP',link:'https://www.ikea.com/co/es/p/blavingad-peluche-tortuga-verde-50522101/'},
+  {name:'Mueble cambiador de pañales — Cómoda abedul blanco · IKEA',category:'Cuarto y descanso',price:'$1.400.000 COP',link:'https://www.ikea.com/co/es/p/aelskvaerd-cambiador-de-panales-comoda-abedul-blanco-80466679/'},
+  {name:'Cambiador de pañales accesorio — IKEA',category:'Cuarto y descanso',price:'$100.000 COP',link:'https://www.ikea.com/co/es/p/vaedra-cambiador-para-bebe-80226137/'},
+  {name:'Forro cambiador de pañales — Blanco · IKEA',category:'Cuarto y descanso',price:'$25.000 COP',link:'https://www.ikea.com/co/es/p/vaedra-forro-protector-cambiador-bebe-blanco-10489212/'}
+];
+
+/* ══════════════════════════════════════
+   ESTADO
+══════════════════════════════════════ */
+let currentUser = null;
+let activeCategory = 'Todos';
+let filterPrice = '';
+let sortBy = '';
+let searchText = '';
+let allGifts = [];
+let unsubscribe = null;
+
+/* ══════════════════════════════════════
+   HELPERS
+══════════════════════════════════════ */
+function esc(s){ return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+function catColor(cat){
+  return {
+    'Alimentación':{bg:'var(--beige-light)',text:'var(--beige-dark)'},
+    'Baño e higiene':{bg:'var(--blue-light)',text:'var(--blue-dark)'},
+    'Cuarto y descanso':{bg:'var(--mint-light)',text:'var(--mint-dark)'},
+    'Juguetes y estimulación':{bg:'var(--pink-light)',text:'var(--pink-dark)'},
+    'Ropa y accesorios':{bg:'var(--coral-light)',text:'var(--coral-dark)'},
+    'Paseo':{bg:'var(--blue-light)',text:'var(--blue-dark)'}
+  }[cat]||{bg:'var(--blue-light)',text:'var(--blue-dark)'};
+}
+
+function toPesos(price){
+  if(!price) return 0;
+  if(String(price).toUpperCase().includes('USD')) return parseFloat(price)*3450;
+  return parseFloat(price)||0;
+}
+
+function plantSVG(pct){
+  const n=Math.min(6,Math.round(pct/100*6));
+  const pos=[{x:60,y:70,r:-25},{x:60,y:52,r:25},{x:60,y:36,r:-20},{x:60,y:20,r:22},{x:60,y:8,r:-15},{x:60,y:-2,r:18}];
+  let leaves='';
+  for(let i=0;i<n;i++){const p=pos[i];leaves+=`<ellipse cx="${p.x}" cy="${p.y}" rx="11" ry="6" fill="#7FC9A9" transform="rotate(${p.r} ${p.x} ${p.y})"/>`;}
+  const flower=pct>=100?`<circle cx="60" cy="4" r="6" fill="#EFA9BE"/><circle cx="60" cy="4" r="2.5" fill="#4A87A3"/>`:'';
+  return `<svg width="80" height="100" viewBox="0 0 120 100"><line x1="60" y1="90" x2="60" y2="10" stroke="#3E8F6C" stroke-width="3" stroke-linecap="round"/>${leaves}${flower}</svg>`;
+}
+
+function filterGifts(gifts){
+  let f=[...gifts];
+  if(activeCategory!=='Todos') f=f.filter(g=>g.category===activeCategory);
+  if(searchText.trim()) f=f.filter(g=>g.name.toLowerCase().includes(searchText.toLowerCase()));
+  if(filterPrice){
+    f=f.filter(g=>{
+      const p=toPesos(g.price);
+      if(filterPrice==='0-50') return p<=50000;
+      if(filterPrice==='50-150') return p>50000&&p<=150000;
+      if(filterPrice==='150+') return p>150000;
+      return true;
+    });
+  }
+  if(sortBy==='asc') f.sort((a,b)=>toPesos(a.price)-toPesos(b.price));
+  if(sortBy==='desc') f.sort((a,b)=>toPesos(b.price)-toPesos(a.price));
+  return f;
+}
+
+/* ══════════════════════════════════════
+   FIREBASE: INICIALIZAR REGALOS
+══════════════════════════════════════ */
+async function seedIfEmpty(){
+  const snap = await db.collection('regalos').limit(1).get();
+  if(snap.empty){
+    const batch = db.batch();
+    SEED_GIFTS.forEach(g=>{
+      const ref = db.collection('regalos').doc();
+      batch.set(ref,{...g, foto:'', takenBy:null, takenAt:null, createdAt: firebase.firestore.FieldValue.serverTimestamp()});
+    });
+    await batch.commit();
+  }
+}
+
+/* ══════════════════════════════════════
+   RENDER: LANDING
+══════════════════════════════════════ */
+function renderLanding(adminMode){
+  document.getElementById('app').innerHTML=`
+    <div class="landing"><div class="landing-box">
+      <div class="card landing-card">
+        <p style="font-size:12px;font-weight:800;letter-spacing:0.09em;text-transform:uppercase;color:var(--blue-dark);margin-bottom:10px;">Baby shower</p>
+        <h1>Regalos para María Paz</h1>
+        <p>Gracias por acompañarnos en esta espera. Elige el regalo que quieras traer. La app no permite que dos personas elijan lo mismo.</p>
+        ${adminMode?`
+          <div class="field"><label>Clave de administradora</label><input id="apass" type="password" placeholder="Escribe la clave" autofocus></div>
+          <button class="btn btn-primary" style="width:100%" onclick="loginAdmin()">Entrar como administradora</button>
+          <div class="landing-toggle"><button class="btn-ghost" onclick="renderLanding(false)">← Volver</button></div>
+        `:`
+          <div class="field">
+            <label>Tu nombre</label>
+            <input id="gname" type="text" placeholder="Escribe tu nombre completo" autofocus>
+            <small>Usa el mismo nombre la próxima vez para ver qué elegiste.</small>
+          </div>
+          <button class="btn btn-primary" style="width:100%" onclick="loginGuest()">Ver la lista de regalos</button>
+          <div class="landing-toggle">¿Eres la administradora? <button class="btn-ghost" onclick="renderLanding(true)">Entrar aquí</button></div>
+        `}
+      </div>
+    </div></div>`;
+  const i=document.getElementById('gname')||document.getElementById('apass');
+  if(i) i.addEventListener('keydown',e=>{if(e.key==='Enter') adminMode?loginAdmin():loginGuest();});
+}
+
+function loginGuest(){
+  const v=document.getElementById('gname').value.trim();
+  if(!v){toast('Escribe tu nombre para continuar.');return;}
+  currentUser={type:'guest',name:v};
+  activeCategory='Todos'; searchText=''; filterPrice=''; sortBy='';
+  startListening();
+}
+
+function loginAdmin(){
+  const v=document.getElementById('apass').value;
+  if(v!==ADMIN_PASS){toast('Clave incorrecta.');return;}
+  currentUser={type:'admin'};
+  startListening();
+}
+
+function logout(){
+  currentUser=null;
+  if(unsubscribe){unsubscribe();unsubscribe=null;}
+  allGifts=[];
+  renderLanding(false);
+}
+
+/* ══════════════════════════════════════
+   ESCUCHA TIEMPO REAL
+══════════════════════════════════════ */
+function startListening(){
+  document.getElementById('app').innerHTML='<div class="loading"><div class="spinner"></div><p>Cargando regalos...</p></div>';
+  if(unsubscribe){unsubscribe();unsubscribe=null;}
+  unsubscribe = db.collection('regalos').orderBy('createdAt').onSnapshot(snap=>{
+    allGifts = snap.docs.map(d=>({id:d.id,...d.data()}));
+    render();
+  }, err=>{
+    console.error(err);
+    toast('Error al cargar los regalos. Recarga la página.');
+  });
+}
+
+/* ══════════════════════════════════════
+   RENDER PRINCIPAL
+══════════════════════════════════════ */
+function render(){
+  if(!currentUser){renderLanding(false);return;}
+  if(currentUser.type==='admin') renderAdmin();
+  else renderGuest();
+}
+
+function topbar(){
+  const who=currentUser.type==='admin'?'Panel de administradora':`Hola, <b>${esc(currentUser.name)}</b>`;
+  return `<div class="topbar">
+    <h1>Regalos para María Paz</h1>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <span class="who">${who}</span>
+      <button class="btn btn-secondary" onclick="logout()">Cambiar usuario</button>
+    </div>
+  </div>`;
+}
+
+function plantBar(){
+  const total=allGifts.length, taken=allGifts.filter(g=>g.takenBy).length;
+  const pct=total?Math.round(taken/total*100):0;
+  const msg=total===0?'Aún no hay regalos.':pct===0?'Sé la primera en elegir un regalo.':pct<100?'Gracias por hacer crecer esta lista.':'¡La lista está completa!';
+  return `<div class="plant-wrap">${plantSVG(pct)}<div class="plant-text">
+    <p class="eyebrow">Progreso de la lista</p>
+    <p class="count">${taken} de ${total} regalos elegidos</p>
+    <p class="msg">${esc(msg)}</p>
+  </div></div>`;
+}
+
+function usedNames(){
+  const names=[...new Set(allGifts.filter(g=>g.takenBy).map(g=>g.takenBy))].sort((a,b)=>a.localeCompare(b,'es'));
+  if(!names.length) return '';
+  return `<div class="names-box">
+    <p class="title">Nombres que ya eligieron un regalo</p>
+    <p class="list">${names.map(esc).join(', ')}</p>
+    <p class="hint">¿Te llamas igual que alguien? Agrega tu apellido para diferenciarte.</p>
+  </div>`;
+}
+
+/* ══════════════════════════════════════
+   RENDER: VISTA INVITADO
+══════════════════════════════════════ */
+function renderGuest(){
+  const cats=['Todos',...new Set(allGifts.map(g=>g.category).filter(Boolean))].sort((a,b)=>a==='Todos'?-1:a.localeCompare(b,'es'));
+  const filtered=filterGifts(allGifts);
+
+  let grid='';
+  if(!allGifts.length) grid='<div class="empty"><p>La lista se está preparando 🌱</p><p>Vuelve pronto.</p></div>';
+  else if(!filtered.length) grid='<div class="empty"><p>Sin resultados</p><p>Intenta con otros filtros.</p></div>';
+  else grid=`<div class="grid">${filtered.map(guestCard).join('')}</div>`;
+
+  document.getElementById('app').innerHTML=`
+    ${topbar()}${plantBar()}
+    <div class="tabs">${cats.map(c=>`<button class="tab${c===activeCategory?' active':''}" onclick="setcat('${esc(c).replace(/'/g,"\\'")}')">${esc(c)}</button>`).join('')}</div>
+    <div class="filters-bar">
+      <div class="search-box"><input type="text" placeholder="Buscar regalo..." value="${esc(searchText)}" oninput="setsearch(this.value)"></div>
+      <div class="filter-group"><label>Precio:</label>
+        <select onchange="setprice(this.value)">
+          <option value="">Todos</option>
+          <option value="0-50"${filterPrice==='0-50'?' selected':''}>Hasta $50.000</option>
+          <option value="50-150"${filterPrice==='50-150'?' selected':''}>$50.000–$150.000</option>
+          <option value="150+"${filterPrice==='150+'?' selected':''}>Más de $150.000</option>
+        </select>
+      </div>
+      <div class="filter-group"><label>Ordenar:</label>
+        <select onchange="setsort(this.value)">
+          <option value="">Por defecto</option>
+          <option value="asc"${sortBy==='asc'?' selected':''}>Precio: menor a mayor</option>
+          <option value="desc"${sortBy==='desc'?' selected':''}>Precio: mayor a menor</option>
+        </select>
+      </div>
+    </div>
+    ${usedNames()}${grid}`;
+}
+
+function guestCard(g){
+  const isMine=currentUser.type==='guest'&&g.takenBy===currentUser.name;
+  const isOther=g.takenBy&&!isMine;
+  const cls=isMine?'taken-mine':isOther?'taken-other':'';
+  const c=catColor(g.category);
+  let actions='';
+  if(isMine) actions=`<div class="status-mine">✓ Tú elegiste este regalo</div><button class="btn btn-secondary" style="width:100%" onclick="release('${g.id}')">Liberar este regalo</button>`;
+  else if(isOther) actions=`<div class="status-taken">Ya fue elegido</div>`;
+  else actions=`<button class="btn btn-primary" style="width:100%" onclick="claim('${g.id}')">Elegir este regalo</button>`;
+  return `<div class="card gift ${cls}">
+    <div class="gift-img">${g.foto?`<img src="${esc(g.foto)}" alt="${esc(g.name)}" onerror="this.parentElement.innerHTML='<span class=\\'placeholder\\'>🎁</span>'">`:'<span class="placeholder">🎁</span>'}</div>
+    <div class="gift-body">
+      ${g.category?`<span class="gift-cat" style="background:${c.bg};color:${c.text}">${esc(g.category)}</span>`:''}
+      <span class="gift-name">${esc(g.name)}</span>
+      ${g.price?`<span class="gift-price">${esc(g.price)}</span>`:''}
+      ${g.link?`<a class="gift-link" href="${esc(g.link)}" target="_blank" rel="noopener">Ver dónde comprarlo →</a>`:''}
+      <div class="gift-actions">${actions}</div>
+    </div>
+  </div>`;
+}
+
+/* ══════════════════════════════════════
+   RENDER: VISTA ADMIN
+══════════════════════════════════════ */
+function renderAdmin(){
+  const taken=allGifts.filter(g=>g.takenBy).length;
+  const pct=allGifts.length?Math.round(taken/allGifts.length*100):0;
+  const rows=allGifts.map(g=>`
+    <div class="admin-row">
+      ${g.foto?`<img src="${esc(g.foto)}" onerror="this.outerHTML='<div class=\\'ph\\'>🎁</div>'">`:'<div class="ph">🎁</div>'}
+      <div class="info">
+        <div class="name">${esc(g.name)}</div>
+        <div class="meta">${esc(g.category||'Sin categoría')}${g.price?' · '+esc(g.price):''}</div>
+        ${g.takenBy?`<div class="taken">Elegido por ${esc(g.takenBy)}</div>`:'<div class="meta" style="color:var(--mint-dark)">Disponible</div>'}
+      </div>
+      <div class="actions">
+        <button class="icon-btn" title="Editar" onclick="openModal('${g.id}')">✏️</button>
+        <button class="icon-btn" title="Eliminar" onclick="del('${g.id}')">🗑️</button>
+      </div>
+    </div>`).join('');
+  document.getElementById('app').innerHTML=`
+    ${topbar()}
+    <div class="plant-wrap">${plantSVG(pct)}<div class="plant-text">
+      <p class="eyebrow">Resumen</p>
+      <p class="count">${taken} de ${allGifts.length} regalos elegidos</p>
+      <p class="msg">Solo tú puedes ver quién eligió cada regalo.</p>
+    </div></div>
+    <div style="display:flex;justify-content:flex-end;margin-bottom:16px;">
+      <button class="btn btn-primary" onclick="openModal()">+ Agregar regalo</button>
+    </div>
+    ${allGifts.length?`<div class="card">${rows}</div>`:'<div class="empty"><p>No hay regalos todavía</p><p>Agrega el primero.</p></div>'}`;
+}
+
+/* ══════════════════════════════════════
+   ACCIONES INVITADO
+══════════════════════════════════════ */
+async function claim(id){
+  const g=allGifts.find(x=>x.id===id);
+  if(!g||g.takenBy) return;
+  try{
+    await db.collection('regalos').doc(id).update({takenBy:currentUser.name,takenAt:firebase.firestore.FieldValue.serverTimestamp()});
+    toast('¡Regalo elegido! 💛');
+  }catch(e){toast('Error al elegir el regalo.');}
+}
+
+async function release(id){
+  try{
+    await db.collection('regalos').doc(id).update({takenBy:null,takenAt:null});
+    toast('Regalo liberado.');
+  }catch(e){toast('Error al liberar el regalo.');}
+}
+
+/* ══════════════════════════════════════
+   FILTROS
+══════════════════════════════════════ */
+function setcat(c){activeCategory=c;renderGuest();}
+function setsearch(v){searchText=v;renderGuest();}
+function setprice(v){filterPrice=v;renderGuest();}
+function setsort(v){sortBy=v;renderGuest();}
+
+/* ══════════════════════════════════════
+   MODAL ADMIN
+══════════════════════════════════════ */
+let editingId=null;
+
+function openModal(id){
+  editingId=id||null;
+  const g=id?allGifts.find(x=>x.id===id):null;
+  const cats=[...new Set(allGifts.map(x=>x.category).filter(Boolean))].sort();
+  const ov=document.createElement('div');
+  ov.className='overlay'; ov.id='modal-ov';
+  ov.innerHTML=`<div class="modal">
+    <h2>${g?'Editar regalo':'Agregar regalo'}</h2>
+    <div class="field"><label>Nombre *</label><input id="f-name" value="${g?esc(g.name):''}" placeholder="Ej: Coche paseador"></div>
+    <div class="field"><label>Categoría *</label>
+      <input id="f-cat" list="catlist" value="${g?esc(g.category):''}" placeholder="Ej: Cuarto y descanso">
+      <datalist id="catlist">${cats.map(c=>`<option value="${esc(c)}">`).join('')}</datalist>
+    </div>
+    <div class="field"><label>Precio (ej: $120.000 COP o $89 USD)</label><input id="f-price" value="${g&&g.price?esc(g.price):''}"></div>
+    <div class="field"><label>Link para comprarlo</label><input id="f-link" value="${g&&g.link?esc(g.link):''}" placeholder="https://..."></div>
+    <div class="field">
+      <label>Imagen del regalo</label>
+      <input id="f-img" type="file" accept="image/*" onchange="prevImg(this)">
+      <small>Sube una foto del producto. Se guardará automáticamente.</small>
+      <div id="img-prev">${g&&g.foto?`<img src="${esc(g.foto)}" class="img-preview">`:''}</div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-primary" id="save-btn" onclick="saveGift()">Guardar</button>
+    </div>
+  </div>`;
+  document.body.appendChild(ov);
+  ov.addEventListener('click',e=>{if(e.target===ov)closeModal();});
+}
+
+function prevImg(input){
+  if(!input.files[0]) return;
+  const r=new FileReader();
+  r.onload=e=>{document.getElementById('img-prev').innerHTML=`<img src="${e.target.result}" class="img-preview">`;};
+  r.readAsDataURL(input.files[0]);
+}
+
+function closeModal(){
+  const ov=document.getElementById('modal-ov');
+  if(ov) ov.remove();
+}
+
+async function saveGift(){
+  const name=document.getElementById('f-name').value.trim();
+  const category=document.getElementById('f-cat').value.trim();
+  const price=document.getElementById('f-price').value.trim();
+  const link=document.getElementById('f-link').value.trim();
+  const file=document.getElementById('f-img').files[0];
+  if(!name||!category){toast('Nombre y categoría son obligatorios.');return;}
+  const btn=document.getElementById('save-btn');
+  btn.disabled=true; btn.textContent='Guardando...';
+  try{
+    let foto=editingId?allGifts.find(x=>x.id===editingId)?.foto||'':'';
+    if(file){
+      toast('Subiendo imagen...');
+      const ref=storage.ref(`regalos/${Date.now()}_${file.name}`);
+      await ref.put(file);
+      foto=await ref.getDownloadURL();
+    }
+    const data={name,category,price,link,foto};
+    if(editingId){
+      await db.collection('regalos').doc(editingId).update(data);
+    } else {
+      await db.collection('regalos').add({...data,takenBy:null,takenAt:null,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+    }
+    closeModal(); toast('¡Guardado!');
+  }catch(e){
+    console.error(e); toast('Error al guardar. Intenta de nuevo.');
+    btn.disabled=false; btn.textContent='Guardar';
+  }
+}
+
+async function del(id){
+  if(!confirm('¿Eliminar este regalo de la lista?')) return;
+  try{
+    await db.collection('regalos').doc(id).delete();
+    toast('Regalo eliminado.');
+  }catch(e){toast('Error al eliminar.');}
+}
+
+/* ══════════════════════════════════════
+   INICIO
+══════════════════════════════════════ */
+(async()=>{
+  try{
+    await seedIfEmpty();
+  }catch(e){
+    console.error('Error al inicializar regalos:',e);
+  }
+  renderLanding(false);
+})();
+</script>
+</body>
+</html>
