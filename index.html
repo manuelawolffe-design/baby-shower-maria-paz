@@ -251,15 +251,50 @@ function filterGifts(gifts){
 /* ══════════════════════════════════════
    FIREBASE: INICIALIZAR REGALOS
 ══════════════════════════════════════ */
-async function seedIfEmpty(){
-  const snap = await db.collection('regalos').limit(1).get();
-  if(snap.empty){
+async function seedAndClean(){
+  const snap = await db.collection('regalos').get();
+  const docs = snap.docs.map(d => ({id: d.id, ...d.data()}));
+
+  if(docs.length === 0){
+    // Primera vez: cargar regalos
+    const configRef = db.collection('config').doc('initialized');
     const batch = db.batch();
     SEED_GIFTS.forEach(g=>{
       const ref = db.collection('regalos').doc();
       batch.set(ref,{...g, foto:'', takenBy:null, takenAt:null, createdAt: firebase.firestore.FieldValue.serverTimestamp()});
     });
+    batch.set(configRef, { at: firebase.firestore.FieldValue.serverTimestamp() });
     await batch.commit();
+    return;
+  }
+
+  // Detectar duplicados por nombre
+  const seen = {};
+  const toDelete = [];
+  docs.forEach(doc => {
+    const key = doc.name;
+    if(!seen[key]){
+      // Primer documento con este nombre: conservar
+      seen[key] = doc;
+    } else {
+      // Duplicado: conservar el que tiene takenBy, borrar el otro
+      if(doc.takenBy && !seen[key].takenBy){
+        // El nuevo tiene selección, borrar el anterior
+        toDelete.push(seen[key].id);
+        seen[key] = doc;
+      } else {
+        // El nuevo no tiene selección (o el anterior ya la tiene), borrar el nuevo
+        toDelete.push(doc.id);
+      }
+    }
+  });
+
+  if(toDelete.length > 0){
+    console.log(`Eliminando ${toDelete.length} duplicados...`);
+    const batch = db.batch();
+    toDelete.forEach(id => batch.delete(db.collection('regalos').doc(id)));
+    await batch.commit();
+    console.log('Duplicados eliminados.');
   }
 }
 
@@ -576,7 +611,7 @@ async function del(id){
 ══════════════════════════════════════ */
 (async()=>{
   try{
-    await seedIfEmpty();
+    await seedAndClean();
   }catch(e){
     console.error('Error al inicializar regalos:',e);
   }
